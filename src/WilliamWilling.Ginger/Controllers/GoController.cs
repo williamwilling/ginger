@@ -12,5 +12,10 @@ namespace WilliamWilling.Ginger.Controllers
         {
             return View();
         }
+
+        public ActionResult Details(string id)
+        {
+            return View();
+        }
 	}
 }

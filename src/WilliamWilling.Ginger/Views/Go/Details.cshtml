@@ -1,0 +1,35 @@
+﻿<h1>Go</h1>
+
+<style>
+  .go-row {
+    margin: 0;
+    padding: 0;
+  }
+
+  .go-cell {
+    border: 1px solid black;
+    border-width: 1px 0 0 1px;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    text-decoration: none;
+  }
+
+  .go-cell:last-child {
+    border-right: 1px solid black;
+  }
+
+  .go-row:last-child .go-cell {
+    border-bottom: 1px solid black;
+  }
+</style>
+
+<div class="go-board">
+  @for (int j = 0; j < 19; j++)
+  {
+    <div class="go-row">
+      @for (int i = 0; i < 19; i++) {<a href="." class="go-cell">&nbsp;</a>}
+    </div>
+  }
+</div>
+
