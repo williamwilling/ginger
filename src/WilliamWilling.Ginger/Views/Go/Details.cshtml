@@ -28,8 +28,21 @@
   @for (int j = 0; j < 19; j++)
   {
     <div class="go-row">
-      @for (int i = 0; i < 19; i++) {<a href="." class="go-cell">&nbsp;</a>}
+      @for (int i = 0; i < 19; i++) {<a href="#" class="go-cell" onclick="onCellClick(this)">&nbsp;</a>}
     </div>
   }
 </div>
 
+<script>
+  function onCellClick(cell) {
+    if (cell.innerHTML === 'B') {
+      cell.innerHTML = 'W';
+    }
+    else if (cell.innerHTML == 'W') {
+      cell.innerHTML = '&nbsp;'
+    }
+    else {
+      cell.innerHTML = 'B';
+    }
+  }
+</script>
