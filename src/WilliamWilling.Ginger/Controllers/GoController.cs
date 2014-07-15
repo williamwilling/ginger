@@ -21,8 +21,8 @@ namespace WilliamWilling.Ginger.Controllers
 
         public ActionResult Details(string id)
         {
-            ViewBag.Id = id;
-            return View();
+            var board = LoadBoard(id);
+            return View(board);
         }
 
         public ActionResult Create()
@@ -44,15 +44,8 @@ namespace WilliamWilling.Ginger.Controllers
             board.Contents = contents;
             board.ETag = "*";
 
-            try
-            {
-                var operation = TableOperation.Replace(board);
-                table.Execute(operation);
-            }
-            catch (Exception e)
-            {
-                int b = 3;
-            }
+            var operation = TableOperation.Replace(board);
+            table.Execute(operation);
         }
 
         private string CreateBoard()
@@ -86,6 +79,23 @@ namespace WilliamWilling.Ginger.Controllers
             }
 
             return board.RowKey;
+        }
+
+        private BoardEntity LoadBoard(string id)
+        {
+            var connectionString = ConfigurationManager.ConnectionStrings["TableStorage"].ConnectionString;
+            var storageAccount = CloudStorageAccount.Parse(connectionString);
+            var client = storageAccount.CreateCloudTableClient();
+            var table = client.GetTableReference("ginger");
+            table.CreateIfNotExists();
+
+            var operation = TableOperation.Retrieve("go", id);
+            var result = table.Execute(operation);
+            var t = (DynamicTableEntity) result.Result;
+            var board = new BoardEntity(t.RowKey);
+            board.Contents = t.Properties["Contents"].StringValue;
+
+            return board;
         }
 	}
 }

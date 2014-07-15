@@ -1,4 +1,6 @@
-﻿<h1>Go</h1>
+﻿@model WilliamWilling.Ginger.Models.BoardEntity
+
+<h1>Go</h1>
 
 <style>
   .go-row {
@@ -25,10 +27,7 @@
 </style>
 
 <div class="go-board">
-  @for (int j = 0; j < 19; j++)
-  {
-    <div class="go-row">@for (int i = 0; i < 19; i++) {<a href="#" class="go-cell" onclick="onCellClick(this)">&nbsp;</a>}</div>
-  }
+  
 </div>
 
 <script>
@@ -46,11 +45,45 @@
     saveBoard();
   }
 
+  function buildBoard(data) {
+    var board = eval('(' + data + ')');
+    var boardElement = document.getElementsByClassName('go-board')[0];
+
+    for (var j = 0; j < board.cells.length; j++) {
+      var row = board.cells[j];
+      var rowElement = document.createElement('div');
+      rowElement.className = 'go-row';
+      boardElement.appendChild(rowElement);
+
+      for (var i = 0; i < row.length; i++) {
+        var cell = row[i];
+        var cellElement = document.createElement('a');
+        cellElement.className = 'go-cell';
+        rowElement.appendChild(cellElement);
+
+        switch (cell)
+        {
+          case 0:
+            cellElement.innerHTML = '&nbsp;'
+            break;
+
+          case 1:
+            cellElement.innerText = 'B';
+            break;
+
+          case 2:
+            cellElement.innerText = 'W';
+            break;
+        }
+      }
+    }
+  }
+
   function saveBoard() {
     var board = serializeBoard();
 
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", "/go/edit/@ViewBag.Id", true);
+    xmlhttp.open("POST", "/go/edit/@Model.RowKey", true);
     xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xmlhttp.send("contents=" + board);
   }
@@ -95,4 +128,6 @@
     result += ']}';
     return result;
   }
+
+  buildBoard("@Model.Contents");
 </script>
