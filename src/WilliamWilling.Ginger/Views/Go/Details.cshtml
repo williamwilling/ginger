@@ -27,9 +27,7 @@
 <div class="go-board">
   @for (int j = 0; j < 19; j++)
   {
-    <div class="go-row">
-      @for (int i = 0; i < 19; i++) {<a href="#" class="go-cell" onclick="onCellClick(this)">&nbsp;</a>}
-    </div>
+    <div class="go-row">@for (int i = 0; i < 19; i++) {<a href="#" class="go-cell" onclick="onCellClick(this)">&nbsp;</a>}</div>
   }
 </div>
 
@@ -44,5 +42,57 @@
     else {
       cell.innerHTML = 'B';
     }
+
+    saveBoard();
+  }
+
+  function saveBoard() {
+    var board = serializeBoard();
+
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open("POST", "/go/edit/@ViewBag.Id", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send("contents=" + board);
+  }
+
+  function serializeBoard() {
+    var result = '{version:1,cells:[';
+    var rows = document.getElementsByClassName('go-row');
+
+    for (var j = 0; j < rows.length; j++) {
+      var row = rows[j];
+      result += '[';
+
+      for (var i = 0; i < row.childNodes.length; i++) {
+        var cell = row.childNodes[i];
+
+        switch (cell.innerHTML) {
+          case 'B':
+            result += '1';
+            break;
+
+          case 'W':
+            result += '2';
+            break;
+
+          default:
+            result += '0';
+            break;
+        }
+
+        if (i < row.childNodes.length - 1) {
+          result += ',';
+        }
+      }
+
+      result += ']';
+
+      if (j < rows.length - 1) {
+        result += ',';
+      }
+    }
+
+    result += ']}';
+    return result;
   }
 </script>

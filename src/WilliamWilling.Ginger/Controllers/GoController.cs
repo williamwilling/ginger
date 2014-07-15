@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.WindowsAzure.Storage;
@@ -19,12 +21,38 @@ namespace WilliamWilling.Ginger.Controllers
 
         public ActionResult Details(string id)
         {
+            ViewBag.Id = id;
             return View();
         }
 
         public ActionResult Create()
         {
             return RedirectToAction("Details", new { id = CreateBoard() });
+        }
+
+        [HttpPost]
+        public void Edit(string id, string contents)
+        {
+            var connectionString = ConfigurationManager.ConnectionStrings["TableStorage"].ConnectionString;
+            var storageAccount = CloudStorageAccount.Parse(connectionString);
+            var client = storageAccount.CreateCloudTableClient();
+            var table = client.GetTableReference("ginger");
+            table.CreateIfNotExists();
+
+            var board = new BoardEntity("go");
+            board.RowKey = id;
+            board.Contents = contents;
+            board.ETag = "*";
+
+            try
+            {
+                var operation = TableOperation.Replace(board);
+                table.Execute(operation);
+            }
+            catch (Exception e)
+            {
+                int b = 3;
+            }
         }
 
         private string CreateBoard()
@@ -59,7 +87,5 @@ namespace WilliamWilling.Ginger.Controllers
 
             return board.RowKey;
         }
-
-        
 	}
 }

@@ -15,6 +15,7 @@ namespace WilliamWilling.Ginger.Models
             PartitionKey = game;
             RowKey = GenerateId();
             Version = 1;
+            Contents = String.Empty;
         }
 
         public int Version
@@ -37,7 +38,7 @@ namespace WilliamWilling.Ginger.Models
             StringBuilder id = new StringBuilder(8);
             var random = new Random();
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 5; i++)
             {
                 id.Append(consonants[random.Next(consonants.Length)]);
                 id.Append(vowels[random.Next(vowels.Length)]);
