@@ -31,15 +31,15 @@
 </div>
 
 <script>
-  function onCellClick(cell) {
-    if (cell.innerHTML === 'B') {
-      cell.innerHTML = 'W';
+  function onCellClick() {
+    if (this.innerHTML === 'B') {
+      this.innerHTML = 'W';
     }
-    else if (cell.innerHTML == 'W') {
-      cell.innerHTML = '&nbsp;'
+    else if (this.innerHTML == 'W') {
+      this.innerHTML = '&nbsp;'
     }
     else {
-      cell.innerHTML = 'B';
+      this.innerHTML = 'B';
     }
 
     saveBoard();
@@ -59,6 +59,8 @@
         var cell = row[i];
         var cellElement = document.createElement('a');
         cellElement.className = 'go-cell';
+        cellElement.href = '#';
+        cellElement.onclick = onCellClick;
         rowElement.appendChild(cellElement);
 
         switch (cell)

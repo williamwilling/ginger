@@ -92,7 +92,8 @@ namespace WilliamWilling.Ginger.Controllers
             var operation = TableOperation.Retrieve("go", id);
             var result = table.Execute(operation);
             var t = (DynamicTableEntity) result.Result;
-            var board = new BoardEntity(t.RowKey);
+            var board = new BoardEntity("go");
+            board.RowKey = t.RowKey;
             board.Contents = t.Properties["Contents"].StringValue;
 
             return board;
